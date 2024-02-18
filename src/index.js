@@ -116,12 +116,20 @@ app.use("/client/histories", historyRouter);
 
 //  "start-server": "node app.js",
 
+let url =
+  process.env.NODE_ENV === "production"
+    ? `${process.env.URL_BACKEND}`
+    : "http://localhost:5000";
+
 connect(MONGODB_URI)
   .then(() => {
     // Khởi động server
-    const server = app.listen(PORT, () => {
-      console.log(`Server đang chạy ở PORT: ${PORT}`);
-    });
+    const server =
+      process.env.NODE_ENV === "production"
+        ? `${process.env.URL_BACKEND}`
+        : app.listen(PORT, () => {
+            console.log(`Server đang chạy ở PORT: ${PORT}`);
+          });
     // Tích hợp Socket.IO với CORS
     const io = require("./public/socket.js").init(server);
 
