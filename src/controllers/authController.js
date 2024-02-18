@@ -40,6 +40,7 @@ exports.postLogin = async (req, res, next) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
         sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain
+        path: "/"
       });
       return res
         .status(200)
@@ -85,6 +86,7 @@ exports.postLoginAdmin = async (req, res, next) => {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
           sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain
+          path: "/"
         });
 
         return res
