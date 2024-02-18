@@ -18,8 +18,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://feadminass3nodejs.onrender.com",
-      "https://feclientass3nodejs.onrender.com",
+      "https://fe-admin-ass3-nodejs.onrender.com",
+      "https://fe-client-ass3-nodejs.onrender.com",
     ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
