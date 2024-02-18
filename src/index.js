@@ -127,23 +127,17 @@ connect(MONGODB_URI)
 
     // Xử lý sự kiện kết nối
     io.on("connection", (client) => {
-      console.log("Có thêm 1 client kết nối !!!");
-      var room; // phòng chát
+      let room; // phòng chát
 
       // tham gia chat
       client.on("join", (data) => {
         room = data;
         client.join(room);
       });
-
+      // nhận và gửi tin nhắn
       client.on("send_message", (data) => {
-        io.to(room).emit("receive_message", data);
+        io.to(data.roomId).emit("receive_message", data);
       });
     });
   })
   .catch((err) => console.log(err));
-
-// Nguyễn Ngọc Sơn
-// sonnguyen732000@gmail.com
-// sonbn2k123
-// 0328904291
