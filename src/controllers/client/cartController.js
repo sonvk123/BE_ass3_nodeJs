@@ -5,7 +5,7 @@ const ProductModel = require("../../models/productModels");
 
 let url =
   process.env.NODE_ENV === "production"
-    ? "https://beass3nodejs.onrender.com"
+    ? `${process.env.URL_BACKEND}`
     : "http://localhost:5000";
 
 

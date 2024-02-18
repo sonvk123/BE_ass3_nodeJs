@@ -6,9 +6,8 @@ const sendMail = require("../../public/sendMail");
 
 let url =
   process.env.NODE_ENV === "production"
-    ? "https://beass3nodejs.onrender.com"
+    ? `${process.env.URL_BACKEND}`
     : "http://localhost:5000";
-
 
 exports.postEmail = async (req, res) => {
   try {
