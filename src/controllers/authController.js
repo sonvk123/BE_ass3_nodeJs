@@ -38,10 +38,8 @@ exports.postLogin = async (req, res, next) => {
       // tạo cookie
       res.cookie("user", userSend, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
-        sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
-        domain: ".onrender.com",
-        path: "/",
+        Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+        SameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
       });
       return res
         .status(200)
@@ -85,10 +83,8 @@ exports.postLoginAdmin = async (req, res, next) => {
         // tạo cookie
         res.cookie("user", userSend, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
-          sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
-          domain: ".onrender.com",
-          path: "/",
+          Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+          SameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
         });
 
         return res
