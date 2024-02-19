@@ -26,6 +26,9 @@ app.use(
   })
 );
 
+res.header("Access-Control-Allow-Credentials", "true");
+res.header("Access-Control-Allow-Origin", "https://fe-client-ass3-nodejs.onrender.com");
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const destinationPath = "images";
