@@ -5,10 +5,10 @@ module.exports = {
     io = require("socket.io")(httpServer, {
       cors: {
         origin: [
-          "http://localhost:3000",
-          "http://localhost:3001",
-          "https://fe-admin-ass3-nodejs.onrender.com",
-          "https://fe-client-ass3-nodejs.onrender.com",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://main--adminass3nodejs.netlify.app",
+    "https://fe-client-ass3-nodejs.onrender.com",
         ],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       },
