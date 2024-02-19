@@ -13,21 +13,33 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Cấu hình cors và cookie-parser trước express-session
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://fe-admin-ass3-nodejs.onrender.com",
-      "https://fe-client-ass3-nodejs.onrender.com",
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
+// Cấu hình cors và cookie-parser trước express-session
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://fe-admin-ass3-nodejs.onrender.com",
+    "https://fe-client-ass3-nodejs.onrender.com",
+  ],
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  credentials: true,
+};
 
-res.header("Access-Control-Allow-Credentials", "true");
-res.header("Access-Control-Allow-Origin", "https://fe-client-ass3-nodejs.onrender.com");
+// Sử dụng CORS middleware
+app.use(cors(corsOptions));
+
+// Đặt header Access-Control-Allow-Credentials và Access-Control-Allow-Origin khi cần
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://fe-admin-ass3-nodejs.onrender.com",
+    "https://fe-client-ass3-nodejs.onrender.com"
+  );
+  next();
+});
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
