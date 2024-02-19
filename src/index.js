@@ -10,7 +10,7 @@ const { connect } = require("./database/database.js");
 const { MONGODB_URI } = require("./database/database.js");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Cấu hình cors và cookie-parser trước express-session
 app.use(
