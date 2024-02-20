@@ -4,11 +4,11 @@
   "description": "Complete Node.js Guide",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --no-stdin src/index.js",
+    "start": "node src/index.js",
     "start-server": "node app.js",
     "dev": "nodemon --inspect src/index.js",
     "build": ""
-  },
+  }
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
   "dependencies": {
