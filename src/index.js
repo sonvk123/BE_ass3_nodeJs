@@ -19,7 +19,7 @@ const corsOptions = {
     "http://localhost:3000",
     "http://localhost:3001",
     "https://adminass3nodejs.netlify.app",
-    "https://fe-client-ass3-nodejs.onrender.com",
+    "https://clientass3nodejs.netlify.app",
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
