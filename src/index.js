@@ -18,17 +18,12 @@ const urlAdmin = process.env.URL_ADMIN;
 const urlClient = process.env.URL_CLIENT;
 
 // Đặt header Access-Control-Allow-Credentials và Access-Control-Allow-Origin khi cần
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Origin",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    `${urlAdmin}`,
-    `${urlClient}`
-  );
-  next();
-});
+const corsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:3001", urlAdmin, urlClient],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
