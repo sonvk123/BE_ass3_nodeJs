@@ -10,22 +10,7 @@ const { connect } = require("./database/database.js");
 const { MONGODB_URI } = require("./database/database.js");
 
 const app = express();
-const PORT = 5000;
-
-// Cấu hình cors và cookie-parser trước express-session
-const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://fe-admin-ass3-nodejs.onrender.com",
-    "https://fe-client-ass3-nodejs.onrender.com",
-  ],
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  credentials: true,
-};
-
-// Sử dụng CORS middleware
-app.use(cors(corsOptions));
+const PORT = process.env.PORT || 5000;
 
 require("dotenv").config();
 
