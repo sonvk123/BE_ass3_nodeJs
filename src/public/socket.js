@@ -1,5 +1,10 @@
 let io;
 
+require("dotenv").config();
+
+const urlAdmin = process.env.URL_ADMIN;
+const urlClient = process.env.URL_CLIENT;
+
 module.exports = {
   init: (httpServer) => {
     io = require("socket.io")(httpServer, {
