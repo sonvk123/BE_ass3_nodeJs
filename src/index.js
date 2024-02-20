@@ -13,18 +13,37 @@ const app = express();
 const PORT = 5000;
 
 // Cấu hình cors và cookie-parser trước express-session
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://fe-admin-ass3-nodejs.onrender.com",
-      "https://fe-client-ass3-nodejs.onrender.com",
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://fe-admin-ass3-nodejs.onrender.com",
+    "https://fe-client-ass3-nodejs.onrender.com",
+  ],
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  credentials: true,
+};
+
+// Sử dụng CORS middleware
+app.use(cors(corsOptions));
+
+require("dotenv").config();
+
+const urlAdmin = process.env.URL_ADMIN;
+const urlClient = process.env.URL_CLIENT;
+
+// Đặt header Access-Control-Allow-Credentials và Access-Control-Allow-Origin khi cần
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    `${urlAdmin}`,
+    `${urlClient}`
+  );
+  next();
+});
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -116,20 +135,12 @@ app.use("/client/histories", historyRouter);
 
 //  "start-server": "node app.js",
 
-let url =
-  process.env.NODE_ENV === "production"
-    ? `${process.env.URL_BACKEND}`
-    : "http://localhost:5000";
-
 connect(MONGODB_URI)
   .then(() => {
     // Khởi động server
-    const server =
-      process.env.NODE_ENV === "production"
-        ? `${process.env.URL_BACKEND}`
-        : app.listen(PORT, () => {
-            console.log(`Server đang chạy ở PORT: ${PORT}`);
-          });
+    const server = app.listen(PORT, () => {
+      console.log(`Server đang chạy ở PORT: ${PORT}`);
+    });
     // Tích hợp Socket.IO với CORS
     const io = require("./public/socket.js").init(server);
 

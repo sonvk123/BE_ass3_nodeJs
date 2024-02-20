@@ -2,13 +2,14 @@ let io;
 
 module.exports = {
   init: (httpServer) => {
+
     io = require("socket.io")(httpServer, {
       cors: {
         origin: [
           "http://localhost:3000",
           "http://localhost:3001",
-          "https://fe-admin-ass3-nodejs.onrender.com",
-          "https://fe-client-ass3-nodejs.onrender.com",
+          `${urlAdmin}`,
+          `${urlClient}`,
         ],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       },
