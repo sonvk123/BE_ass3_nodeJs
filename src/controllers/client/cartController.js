@@ -2,12 +2,10 @@ const mongoose = require("mongoose");
 const userModels = require("../../models/userModels");
 const ProductModel = require("../../models/productModels");
 
-
 let url =
   process.env.NODE_ENV === "production"
     ? `${process.env.URL_BACKEND}`
     : "http://localhost:5000";
-
 
 // Lấy danh sách cart
 exports.getCarts = async (req, res) => {
@@ -23,12 +21,12 @@ exports.getCarts = async (req, res) => {
 
     cart.items.forEach((item) => {
       if (!item.img.includes("firebasestorage")) {
-        item.img = `${url}/${imageUrl}`;
+        item.img = `${url}/${item.img}`;
       }
     });
+
     res.status(200).json(cart.items);
   } catch (error) {
-
     res.status(500).json({ message: "Lỗi Server" });
   }
 };
@@ -54,7 +52,6 @@ exports.postAddToCart = async (req, res) => {
       .status(200)
       .json({ message: "Đã thêm sản phẩm vào giỏ hàng thành công" });
   } catch (error) {
-
     res.status(500).json({ message: "lỗi Server" });
   }
 };
@@ -72,7 +69,6 @@ exports.deleteToCart = async (req, res) => {
     user.removeFromCart(idProduct);
 
     res.status(200).json({ message: "Đã xóa sản phẩm khỏi giỏ hàng" });
-
   } catch (error) {
     res.status(500).json({ message: "Lỗi Server" });
   }

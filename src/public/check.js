@@ -12,7 +12,7 @@ exports.checkAuthentication = (req, res, next) => {
 // kiểm tra vai trò
 exports.checkRoleAdmin = (req, res, next) => {
   // Kiểm tra vai trò của người dùng
-  if (req.cookies.user && req.cookies.user.isAdmin === "admin") {
+  if (req.cookies.user && req.cookies.user.isAdmin === "Admin") {
     next(); // Cho phép tiếp tục xử lý yêu cầu
   } else {
     res.status(403).send({ messgae: "cần có quyền admin để truy cập !!!" }); // Trả về lỗi 403 nếu không có quyền truy cập
@@ -22,7 +22,7 @@ exports.checkRoleAdmin = (req, res, next) => {
 exports.checkRoleAdminCounselors = (req, res, next) => {
   // Kiểm tra vai trò của người dùng
   if (
-    (req.cookies.user && req.cookies.user.isAdmin === "admin") ||
+    (req.cookies.user && req.cookies.user.isAdmin === "Admin") ||
     req.cookies.user.isAdmin === "Counselors"
   ) {
     console.log("đúng nè");

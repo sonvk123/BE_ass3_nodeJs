@@ -5,7 +5,6 @@ let url =
     ? `${process.env.URL_BACKEND}`
     : "http://localhost:5000";
 
-
 // lấy danh sách products và theo tên
 exports.getPagination = async (req, res) => {
   const { count, page, search, category } = req.query;
@@ -93,7 +92,6 @@ exports.getDetail = async (req, res) => {
     }
     res.send({ message: "gửi dữ liệu thành công", products: Product });
   } catch (error) {
-
     res.status(500).json({ message: "Lỗi server khi lấy dữ liệu sản phẩm" });
   }
 };

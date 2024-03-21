@@ -6,7 +6,6 @@ const chatController = require("../../controllers/chat/chatControlle");
 
 const {
   checkAuthentication,
-  checkRoleAdmin,
   checkRoleAdminCounselors,
 } = require("../../public/check");
 

@@ -16,7 +16,7 @@ router.get(
 
 // xem chi tiểt 1 order
 router.get(
-  "/:orderId",
+  "/:historyId",
   checkAuthentication,
   checkRoleAdmin,
   dashboardController.getDetail

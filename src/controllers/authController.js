@@ -38,8 +38,8 @@ exports.postLogin = async (req, res, next) => {
       // tạo cookie
       res.cookie("user", userSend, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
-        sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
+        Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+        SameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
       });
       return res
         .status(200)
@@ -70,7 +70,7 @@ exports.postLoginAdmin = async (req, res, next) => {
     const doMatch = await bcrypt.compare(password, user.password);
     // nếu đúng thì lấy data admin để truyền xuống client
     if (doMatch) {
-      if (user.isAdmin === "admin" || user.isAdmin === "Counselors") {
+      if (user.isAdmin === "Admin" || user.isAdmin === "Counselors") {
         const userSend = {
           _id: user._id,
           email: user.email,
@@ -83,8 +83,8 @@ exports.postLoginAdmin = async (req, res, next) => {
         // tạo cookie
         res.cookie("user", userSend, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
-          sameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
+          Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+          SameSite: "None", // Cho phép cookie được chia sẻ giữa các domain,
         });
 
         return res
@@ -93,7 +93,7 @@ exports.postLoginAdmin = async (req, res, next) => {
       } else {
         return res.status(403).send({
           errorMessage:
-            "Đăng nhập thất bại, phải đăng nhập bằng tài khoản admin hoặc Counselors !!",
+            "Đăng nhập thất bại, phải đăng nhập bằng tài khoản Admin hoặc Counselors !!",
         });
       }
     } else {

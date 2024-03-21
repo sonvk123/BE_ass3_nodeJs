@@ -30,7 +30,10 @@ const html = ({ fullname, phone, address, userCartItems, total }) => {
       return `
         <tr style="border-top: 1px solid white;">
           <td style="text-align: center; width: 22%;">${value.nameProduct}</td>
-          <td style="text-align: center;"><img src="${value.img}" alt="iPhone" width="50"></td>
+          <td style="text-align: center;"><img src="${value.img.replace(
+            /\\/g,
+            "/"
+          )}" alt="iPhone" width="50"></td>
           <td style="text-align: center;"><span">${priceProduct} VND</span></td>
           <td style="text-align: center;">${value.quantity}</td>
           <td style="text-align: center;"><span">${totalPrice} VND</span></td>

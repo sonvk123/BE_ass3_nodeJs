@@ -3,7 +3,6 @@ const orderModels = require("../../models/orderModels");
 const productModels = require("../../models/productModels");
 const sendMail = require("../../public/sendMail");
 
-
 let url =
   process.env.NODE_ENV === "production"
     ? `${process.env.URL_BACKEND}`
@@ -38,13 +37,7 @@ exports.postEmail = async (req, res) => {
 
       const s = +item.priceProduct * +item.quantity;
       total += s;
-
-      // sửa link hình ảnh
-      if (!item.img.includes("firebasestorage")) {
-        item.img = `${url}/${item.img}`;
-      }
     }
-
     // tạo một order mới
     const newOrder = await orderModels.create({
       userId: user._id,
@@ -63,6 +56,12 @@ exports.postEmail = async (req, res) => {
     await newOrder.save();
     await user.clearCart();
 
+    for (const item of userCartItems) {
+      // sửa link hình ảnh
+      if (!item.img.includes("firebasestorage")) {
+        item.img = `${url}/${item.img}`;
+      }
+    }
     // gửi mail sau khi lưu
     await sendMail({
       email: to,
@@ -74,9 +73,9 @@ exports.postEmail = async (req, res) => {
       total,
     });
 
-    res.status(200).json({ message: "Đã gửi email thành công" });
+    res.status(200).send({ message: "Đã gửi email thành công" });
   } catch (error) {
-
-    res.status(500).json({ message: "Lỗi máy chủ" });
+    console.log("error:", error);
+    res.status(500).send({ message: "Lỗi máy chủ" });
   }
 };

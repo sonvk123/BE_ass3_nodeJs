@@ -1,9 +1,5 @@
-const mongoose = require("mongoose");
-
 const userModel = require("../../models/userModels");
 const orderModel = require("../../models/orderModels");
-
-const ProductModel = require("../../models/productModels");
 
 let url =
   process.env.NODE_ENV === "production"
@@ -22,8 +18,13 @@ exports.getHistory = async (req, res) => {
 
   try {
     const user = await userModel.findById(idUser);
+
+    // lấy các orderId để lấy các order của user
     const orderIds = user.order;
     const orders = await orderModel.find({ _id: { $in: orderIds } });
+
+    // Sắp xếp orders theo thuộc tính dateTime từ mới nhất đến cũ nhất
+    orders.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
 
     // Tính toán vị trí đầu và cuối của trang hiện tại
     const startIndex = (currentPage - 1) * pageSize;
@@ -57,10 +58,9 @@ exports.getHistory = async (req, res) => {
 
     res.send(data_send);
   } catch (error) {
-
     res.status(500).send({ message: "Lỗi server khi lấy lịch sử đơn hàng" });
   }
-}
+};
 
 // lấy History theo id
 exports.getDetail = async (req, res) => {
@@ -78,9 +78,8 @@ exports.getDetail = async (req, res) => {
       }
     });
 
-    res.send(order);
+    res.status(200).send(order);
   } catch (error) {
-
     res.status(500).send({ message: "Lỗi server khi lấy chi tiết đơn hàng" });
   }
 };

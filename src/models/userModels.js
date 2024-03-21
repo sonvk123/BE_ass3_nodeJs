@@ -89,8 +89,3 @@ UserSchema.methods.clearCart = function () {
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
-// Client
-// Counselors
-// Admin
-
-// cart: { items: [] },

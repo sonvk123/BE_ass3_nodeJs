@@ -2,6 +2,8 @@ const fs = require("fs");
 
 const path = require("path");
 
+const bcrypt = require("bcryptjs");
+
 const DATA_PATH_Hotle = path.join("src", "DataAssignment03", "products.json");
 
 const data_Products = JSON.parse(fs.readFileSync(DATA_PATH_Hotle, "utf8"));
@@ -39,7 +41,6 @@ exports.postProducts = (req, res) => {
 
 // lấy danh sách User
 exports.postAllData = async (req, res) => {
-
   const { count, page, search } = req.query;
   // count : số lượng trong 1 trang
   // page : trang hiện tại
@@ -58,7 +59,7 @@ exports.postAllData = async (req, res) => {
         fullName: { $regex: new RegExp(search, "i") },
       });
     }
-
+    console.log("users:", users);
     // Tính vị trí đầu và cuối của trang hiện tại
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, users.length);
@@ -76,7 +77,6 @@ exports.postAllData = async (req, res) => {
 
     res.status(200).send(data_send);
   } catch (error) {
-
     res.status(500).send({ errorMessage: "Lỗi server" });
   }
 };
@@ -88,9 +88,11 @@ exports.getDetailData = async (req, res) => {
     const user = await userModels.findById(userId);
 
     if (!user) {
-      return res.status(404).send({ errorMessage: 'Không tìm thấy người dùng' });
+      return res
+        .status(404)
+        .send({ errorMessage: "Không tìm thấy người dùng" });
     }
-
+    console.log("user:", user);
     res.status(200).send({ message: "Lấy dữ liệu thành công", user });
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
@@ -98,9 +100,29 @@ exports.getDetailData = async (req, res) => {
   }
 };
 
-
 // update user
-exports.putUpdateUser = async (req, res) => { };
+exports.putUpdateUser = async (req, res) => {
+  const { _id, fullName, email, password, phone } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const newUser = { fullName, email, password: hashedPassword, phone };
+
+  try {
+    const user = await userModels.findByIdAndUpdate(_id, newUser, {
+      new: true,
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .send({ message: "Không tìm thấy User để cập nhật" });
+    }
+    res.status(200).send({ message: "Cập nhật User thành công !!!" });
+  } catch (error) {
+    res.status(500).send({ message: "Lỗi server khi cập nhật User" });
+  }
+};
 
 // xóa user
 exports.deleteUser = async (req, res) => {

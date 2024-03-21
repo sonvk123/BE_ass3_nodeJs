@@ -1,5 +1,7 @@
 const productModels = require("../../models/productModels");
 
+const file = require("../../public/file");
+
 let url =
   process.env.NODE_ENV === "production"
     ? `${process.env.URL_BACKEND}`
@@ -99,7 +101,7 @@ exports.getDetail = async (req, res) => {
 exports.postAddProduct = async (req, res) => {
   const { Category, Price, LongDes, ShortDes, Name, Quantity } = req.body;
   const Images = req.files;
-
+  console.log("Images:", Images);
   try {
     const newProduct = await productModels.create({
       category: Category,
@@ -123,28 +125,27 @@ exports.postAddProduct = async (req, res) => {
 // cập nhật product
 exports.putUpdateProduct = async (req, res) => {
   const { _id, Category, LongDes, ShortDes, Name, Price, Quantity } = req.body;
-  const query = { _id: _id };
-  const newProduct = {
-    $set: {
-      name: Name,
-      category: Category,
-      long_desc: LongDes,
-      short_desc: ShortDes,
-      price: Price,
-      quantity: Quantity,
-    },
-  };
+
+  const product = await productModels.findById(_id);
+  if (!product) {
+    return res
+      .status(404)
+      .send({ message: "Không tìm thấy sản phẩm để cập nhật" });
+  }
 
   try {
+    const query = { _id: _id };
+    const newProduct = {
+      $set: {
+        name: Name,
+        category: Category,
+        long_desc: LongDes,
+        short_desc: ShortDes,
+        price: Price,
+        quantity: Quantity,
+      },
+    };
     await productModels.updateOne(query, newProduct);
-    const product = await productModels.findById(_id);
-
-    if (!product) {
-      return res
-        .status(404)
-        .send({ message: "Không tìm thấy sản phẩm để cập nhật" });
-    }
-
     res.status(200).send({ message: "Cập nhật sản phẩm thành công !!!" });
   } catch (error) {
     res.status(500).send({ message: "Lỗi server khi cập nhật sản phẩm" });
@@ -156,18 +157,22 @@ exports.getDeleteProduct = async (req, res) => {
   const productId = req.params.productId;
 
   try {
-    // Sử dụng phương thức remove hoặc deleteOne của Model để xóa sản phẩm theo id
-    const result = await productModels.deleteOne({ _id: productId });
+    // Tìm và xóa sản phẩm theo id
+    const product = await productModels.findOneAndDelete({ _id: productId });
 
-    if (result.deletedCount === 1) {
-      // Nếu sản phẩm được xóa thành công, trả về phản hồi thành công
-      return res
-        .status(200)
-        .send({ message: "Sản phẩm đã được xóa thành công" });
-    } else {
-      // Nếu không tìm thấy sản phẩm với id tương ứng, trả về phản hồi lỗi
+    // Kiểm tra sản phẩm có tồn tại không
+    if (!product) {
       return res.status(404).send({ message: "Không tìm thấy sản phẩm" });
     }
+
+    // Xóa các tệp ảnh liên quan đến sản phẩm
+    file.deleteFile(product.img1);
+    file.deleteFile(product.img2);
+    file.deleteFile(product.img3);
+    file.deleteFile(product.img4);
+
+    // Trả về phản hồi thành công nếu sản phẩm được xóa thành công
+    return res.status(200).send({ message: "Sản phẩm đã được xóa thành công" });
   } catch (error) {
     return res.status(500).send({ message: "Lỗi server" });
   }

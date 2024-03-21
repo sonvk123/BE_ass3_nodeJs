@@ -19,7 +19,12 @@ const urlClient = process.env.URL_CLIENT;
 
 // Đặt header Access-Control-Allow-Credentials và Access-Control-Allow-Origin khi cần
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:3001", urlAdmin, urlClient],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    urlAdmin,
+    urlClient,
+  ],
   credentials: true,
 };
 
@@ -27,14 +32,14 @@ app.use(cors(corsOptions));
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const destinationPath = "images";
+    const destinationPath = "./src/images";
     if (!fs.existsSync(destinationPath)) {
       fs.mkdirSync(destinationPath);
     }
     cb(null, destinationPath);
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
@@ -70,7 +75,6 @@ const historyRouter = require("./routes/client/historyRouter.js");
 
 // admin
 const adminRoutes = require("./routes/admin/adminRoute.js");
-const homeRouter = require("./routes/admin/homeRouter.js");
 const dashboardRouter = require("./routes/admin/dashboardRouter.js");
 const productsRouterAdmin = require("./routes/admin/productsRouter.js");
 
@@ -79,7 +83,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("files")
 );
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/src/images", express.static(path.join(__dirname, "images")));
 
 app.use(cookieParser());
 
@@ -93,8 +97,7 @@ app.use("/client/chatrooms", chatRouter);
 app.use("/admin", adminRoutes);
 // đăng ký đăng nhập
 app.use("/admin/user", authRoutes);
-// trang home
-app.use(homeRouter);
+// trang dashboard
 app.use("/admin/histories", dashboardRouter);
 app.use("/admin/products", productsRouterAdmin);
 
