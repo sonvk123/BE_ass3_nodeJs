@@ -38,7 +38,7 @@ exports.postLogin = async (req, res, next) => {
       // tạo cookie
       res.cookie("user", userSend, {
         httpOnly: true,
-        Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+        secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
 
       });
       return res
@@ -83,7 +83,7 @@ exports.postLoginAdmin = async (req, res, next) => {
         // tạo cookie
         res.cookie("user", userSend, {
           httpOnly: true,
-          Secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
+          secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS khi ở production
 
         });
 
