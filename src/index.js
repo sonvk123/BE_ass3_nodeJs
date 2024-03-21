@@ -114,8 +114,6 @@ app.use("/client", orderRouter);
 // History
 app.use("/client/histories", historyRouter);
 
-//  "start-server": "node app.js",
-
 connect(MONGODB_URI).then(() => {
   // Khởi động server
   const server = app.listen(PORT, () => {});
