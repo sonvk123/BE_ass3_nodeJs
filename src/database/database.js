@@ -10,7 +10,6 @@ const connect = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Đã kết nối tới database thành công !");
     return connection;
   } catch (err) {
     const { code } = err;
@@ -19,7 +18,6 @@ const connect = async () => {
     } else if (code === "ENOTFOUIND") {
       throw new Exception("sai tên sever name !!!");
     }
-    console.log(err);
     throw new Exception("lỗi gì đó rồi !!m!");
   }
 };

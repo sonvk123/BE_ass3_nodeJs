@@ -5,7 +5,6 @@ const sessionModel = require("../../models/sessionModel");
 exports.getMessageByRoomId = async (req, res, next) => {
   try {
     const roomId = req.query.roomId;
-    console.log("roomId:", roomId);
 
     const MessageByRoomId = await sessionModel.findById(roomId);
 
@@ -51,7 +50,6 @@ exports.addMessage = async (req, res, next) => {
 exports.getAllRoom = async (req, res, next) => {
   try {
     const users = await usesrModel.find({ isAdmin: "Client" });
-    console.log("users:", users);
     res.status(200).json({ message: "Lấy dữ liệu thành công", data: users });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server khi lấy dữ liệu" });

@@ -75,7 +75,6 @@ exports.postEmail = async (req, res) => {
 
     res.status(200).send({ message: "Đã gửi email thành công" });
   } catch (error) {
-    console.log("error:", error);
     res.status(500).send({ message: "Lỗi máy chủ" });
   }
 };

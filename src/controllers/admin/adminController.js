@@ -59,7 +59,6 @@ exports.postAllData = async (req, res) => {
         fullName: { $regex: new RegExp(search, "i") },
       });
     }
-    console.log("users:", users);
     // Tính vị trí đầu và cuối của trang hiện tại
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, users.length);
@@ -92,7 +91,6 @@ exports.getDetailData = async (req, res) => {
         .status(404)
         .send({ errorMessage: "Không tìm thấy người dùng" });
     }
-    console.log("user:", user);
     res.status(200).send({ message: "Lấy dữ liệu thành công", user });
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);

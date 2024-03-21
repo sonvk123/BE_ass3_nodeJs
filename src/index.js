@@ -49,10 +49,8 @@ const fileFilter = (req, file, cb) => {
     file.mimetype === "image/jpg" ||
     file.mimetype === "image/jpeg"
   ) {
-    console.log("true");
     cb(null, true);
   } else {
-    console.log("false");
     cb(null, false);
   }
 };
@@ -118,28 +116,24 @@ app.use("/client/histories", historyRouter);
 
 //  "start-server": "node app.js",
 
-connect(MONGODB_URI)
-  .then(() => {
-    // Khởi động server
-    const server = app.listen(PORT, () => {
-      console.log(`Server đang chạy ở PORT: ${PORT}`);
-    });
-    // Tích hợp Socket.IO với CORS
-    const io = require("./public/socket.js").init(server);
+connect(MONGODB_URI).then(() => {
+  // Khởi động server
+  const server = app.listen(PORT, () => {});
+  // Tích hợp Socket.IO với CORS
+  const io = require("./public/socket.js").init(server);
 
-    // Xử lý sự kiện kết nối
-    io.on("connection", (client) => {
-      let room; // phòng chát
+  // Xử lý sự kiện kết nối
+  io.on("connection", (client) => {
+    let room; // phòng chát
 
-      // tham gia chat
-      client.on("join", (data) => {
-        room = data;
-        client.join(room);
-      });
-      // nhận và gửi tin nhắn
-      client.on("send_message", (data) => {
-        io.to(data.roomId).emit("receive_message", data);
-      });
+    // tham gia chat
+    client.on("join", (data) => {
+      room = data;
+      client.join(room);
     });
-  })
-  .catch((err) => console.log(err));
+    // nhận và gửi tin nhắn
+    client.on("send_message", (data) => {
+      io.to(data.roomId).emit("receive_message", data);
+    });
+  });
+});

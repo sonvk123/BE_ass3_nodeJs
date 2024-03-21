@@ -1,6 +1,5 @@
 // Middleware kiểm tra xác thực đã đăng nhập
 exports.checkAuthentication = (req, res, next) => {
-
   // Kiểm tra xem người dùng đã đăng nhập hay chưa
   if (req.cookies.user && req.cookies.user.isLogin) {
     next(); // Cho phép tiếp tục xử lý yêu cầu
@@ -25,10 +24,8 @@ exports.checkRoleAdminCounselors = (req, res, next) => {
     (req.cookies.user && req.cookies.user.isAdmin === "Admin") ||
     req.cookies.user.isAdmin === "Counselors"
   ) {
-    console.log("đúng nè");
     next(); // Cho phép tiếp tục xử lý yêu cầu
   } else {
-    console.log("sai nè");
     res.status(403).send({
       messgae: "cần có quyền admin hoặc Counselors để truy cập !!!",
       data: "lỗi",

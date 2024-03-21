@@ -32,7 +32,6 @@ UserSchema.methods.addToCart = function ({ product, count }) {
   const cartProductIndex = this.cart.items.findIndex((cp) => {
     return cp.productId.toString() === product._id.toString();
   });
-  console.log();
   let newQuantity;
   const updatedCartItems = [...this.cart.items];
 
@@ -57,8 +56,6 @@ UserSchema.methods.addToCart = function ({ product, count }) {
 
 // xóa một sản phẩm trong giỏ hàng
 UserSchema.methods.removeFromCart = function (productId) {
-  // console.log("productId:",typeof productId)
-  // console.log("productId:",productId)
   const updatedCartItems = this.cart.items.filter((item) => {
     return item.productId.toString() !== productId.toString();
   });

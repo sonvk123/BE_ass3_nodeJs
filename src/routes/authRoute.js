@@ -20,8 +20,6 @@ router.post(
   [
     check("email")
       .custom((value, { req }) => {
-        console.log("value:", value);
-
         return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(
@@ -35,8 +33,6 @@ router.post(
       .isMobilePhone("vi-VN", { strictMode: false }) // Kiểm tra số điện thoại
       .withMessage("Vui lòng nhập số điện thoại hợp lệ.")
       .custom((value, { req }) => {
-        console.log("value:", value);
-
         return User.findOne({ phoneNumber: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(

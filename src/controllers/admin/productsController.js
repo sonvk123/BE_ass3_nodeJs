@@ -101,9 +101,9 @@ exports.getDetail = async (req, res) => {
 exports.postAddProduct = async (req, res) => {
   const { Category, Price, LongDes, ShortDes, Name, Quantity } = req.body;
   const Images = req.files;
-  console.log("Images:", Images);
+
   try {
-    const newProduct = await productModels.create({
+    await productModels.create({
       category: Category,
       img1: Images[0].path,
       img2: Images[1].path,
