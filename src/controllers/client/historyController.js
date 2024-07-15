@@ -1,6 +1,8 @@
 const userModel = require("../../models/userModels");
 const orderModel = require("../../models/orderModels");
 
+const { format } = require("date-fns");
+
 let url =
   process.env.NODE_ENV === "production"
     ? `${process.env.URL_BACKEND}`
@@ -16,48 +18,42 @@ exports.getHistory = async (req, res) => {
   const pageSize = +count;
   const currentPage = +page;
 
+  const skip = (currentPage - 1) * pageSize;
+
   try {
     const user = await userModel.findById(idUser);
-
     // lấy các orderId để lấy các order của user
     const orderIds = user.order;
-    const orders = await orderModel.find({ _id: { $in: orderIds } });
 
-    // Sắp xếp orders theo thuộc tính dateTime từ mới nhất đến cũ nhất
-    orders.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+    const orders = await orderModel
+      .find({ _id: { $in: orderIds } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
 
-    // Tính toán vị trí đầu và cuối của trang hiện tại
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    // Tổng số bản ghi
+    const totalCount = await orderModel.countDocuments();
+    const totalPages = Math.ceil(totalCount / pageSize); // Tổng số trang
 
-    const totalRecords = orders.length; // Tổng số bản ghi
-    const totalPages = Math.ceil(totalRecords / pageSize); // Tổng số trang
-
-    // Lấy dữ liệu cho trang hiện tại
-    const currentPageData = orders.slice(startIndex, endIndex);
-
-    let historySend = [];
-    currentPageData.forEach((order) => {
-      const history = {
-        _id: order._id,
-        idUser: idUser,
-        fullname: order.fullname,
-        phone: order.phone,
-        address: order.address,
-        total: order.cart.total,
-        delivery: true,
-        status: true,
-      };
-      historySend.push(history);
-    });
+    const historySend = orders.map((order) => ({
+      _id: order._id,
+      idUser: idUser,
+      fullname: order.fullname,
+      phone: order.phone,
+      address: order.address,
+      total: order.cart.total,
+      delivery: true,
+      status: true,
+      time: format(order.createdAt, "HH:mm:ss yyyy-MM-dd"),
+    }));
 
     const data_send = {
       totalPages: totalPages,
       currentPageData: historySend,
     };
-
     res.send(data_send);
   } catch (error) {
+    console.log("error:", error);
     res.status(500).send({ message: "Lỗi server khi lấy lịch sử đơn hàng" });
   }
 };

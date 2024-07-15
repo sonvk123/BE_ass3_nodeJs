@@ -116,7 +116,9 @@ app.use("/client/histories", historyRouter);
 
 connect(MONGODB_URI).then(() => {
   // Khởi động server
-  const server = app.listen(PORT, () => {});
+  const server = app.listen(PORT, () => {
+    console.log(`server đang chạy ở PORT: ${PORT}`);
+  });
   // Tích hợp Socket.IO với CORS
   const io = require("./public/socket.js").init(server);
 

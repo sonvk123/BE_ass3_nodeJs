@@ -38,6 +38,7 @@ exports.postEmail = async (req, res) => {
       const s = +item.priceProduct * +item.quantity;
       total += s;
     }
+
     // tạo một order mới
     const newOrder = await orderModels.create({
       userId: user._id,
@@ -46,7 +47,6 @@ exports.postEmail = async (req, res) => {
       email: to,
       address,
       cart: { items: userCartItems, total },
-      dateTime: new Date(),
     });
 
     // lưu các thay đổi của user và order

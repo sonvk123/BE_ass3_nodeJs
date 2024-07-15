@@ -14,56 +14,41 @@ exports.getPagination = async (req, res) => {
 
   const pageSize = +req.query.count;
   const currentPage = +req.query.page;
+
+  const skip = (currentPage - 1) * pageSize;
+
+  // Điều kiện truy vấn dựa trên thông tin từ người dùng
+  const query = {};
+  if (search) {
+    query.name = { $regex: new RegExp(search, "i") };
+  }
+  if (category && category !== "all") {
+    query.category = category;
+  }
+
   try {
-    let products;
-    if (!search && category === "all") {
-      products = await ProductModel.find();
-    } else if (!search && category !== "all") {
-      products = await ProductModel.find({ category: category });
-    } else if (search && category === "all") {
-      products = await ProductModel.find({
-        name: { $regex: new RegExp(search, "i") },
-      });
-    } else if (search && category !== "all") {
-      products = await ProductModel.find({
-        name: { $regex: new RegExp(search, "i") },
-        category: category,
-      });
-    }
+    // Sử dụng Mongoose Query Helpers và Aggregation Framework nếu cần thiết
+    const [products, totalCount] = await Promise.all([
+      ProductModel.find(query).skip(skip).limit(pageSize).lean(),
+      ProductModel.countDocuments(query),
+    ]);
 
-    // Tính toán vị trí đầu và cuối của trang hiện tại
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    // Tổng số bản ghi
+    const totalPages = Math.ceil(totalCount / pageSize);
 
-    const totalRecords = products.length; // Tổng số bản ghi
-
-    const totalPages = Math.ceil(totalRecords / pageSize); // Tổng số trang
-
-    // Lấy dữ liệu cho trang hiện tại
-    const currentPageData = products.slice(startIndex, endIndex);
-
-    let newCurrentPageData = [];
-    currentPageData.map((product) => {
-      const updatedImages = [];
-      for (let i = 1; i <= 4; i++) {
-        const imageUrl = product[`img${i}`];
-        if (imageUrl.includes("firebasestorage")) {
-          updatedImages.push(imageUrl);
-        } else {
-          updatedImages.push(`${url}/${imageUrl}`);
-        }
-      }
-      const NewProduct = {
-        _id: product._id,
-        name: product.name,
-        category: product.category,
-        price: product.price,
-        short_desc: product.short_desc,
-        long_desc: product.long_desc,
-        Images: updatedImages,
-      };
-      newCurrentPageData.push(NewProduct);
-    });
+    let newCurrentPageData = products.map((product) => ({
+      _id: product._id,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      short_desc: product.short_desc,
+      long_desc: product.long_desc,
+      Images: Array.from({ length: 4 }, (_, i) =>
+        product[`img${i + 1}`].includes("firebasestorage")
+          ? product[`img${i + 1}`]
+          : `${url}/${product[`img${i + 1}`]}`
+      ),
+    }));
 
     const data_send = {
       totalPages: totalPages,

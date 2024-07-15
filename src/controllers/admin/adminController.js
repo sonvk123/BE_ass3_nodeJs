@@ -48,30 +48,34 @@ exports.postAllData = async (req, res) => {
 
   const pageSize = +req.query.count;
   const currentPage = +req.query.page;
+
+  const skip = (currentPage - 1) * pageSize;
+
   try {
     let users;
 
     if (!search) {
-      users = await userModels.find({ isAdmin: "Client" });
+      users = await userModels
+        .find({ isAdmin: "Client" })
+        .skip(skip)
+        .limit(pageSize);
+      // .exec();
     } else {
-      users = await userModels.find({
-        isAdmin: "Client",
-        fullName: { $regex: new RegExp(search, "i") },
-      });
+      users = await userModels
+        .find({
+          isAdmin: "Client",
+          fullName: { $regex: new RegExp(search, "i") },
+        })
+        .skip(skip)
+        .limit(pageSize);
+      // .exec();
     }
-    // Tính vị trí đầu và cuối của trang hiện tại
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, users.length);
-
-    const totalRecords = users.length; // Tổng số bản ghi
-    const totalPages = Math.ceil(totalRecords / pageSize); // Tổng số trang
-
-    // Lấy dữ liệu cho trang hiện tại
-    const currentPageData = users.slice(startIndex, endIndex);
+    const totalCount = await userModels.countDocuments({ isAdmin: "Client" });
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     const data_send = {
       totalPages: totalPages,
-      users: currentPageData,
+      users: users,
     };
 
     res.status(200).send(data_send);
